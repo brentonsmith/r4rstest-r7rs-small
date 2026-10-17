@@ -1,0 +1,2 @@
+# Scheme sources are read by test runners; keep them LF.
+*.scm text eol=lf
