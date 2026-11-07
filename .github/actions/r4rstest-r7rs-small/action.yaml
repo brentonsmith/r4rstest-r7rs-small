@@ -1,0 +1,30 @@
+name: r4rstest-r7rs-small
+inputs:
+  scheme:
+    description: The implementation to test snow-chibi on
+    required: true
+runs:
+  using: composite
+  steps:
+    - name: Install Chibi
+      shell: bash
+      run: |
+        git clone https://github.com/ashinn/chibi-scheme.git
+        cd chibi-scheme
+        make
+        sudo make install
+
+    - name: Create snow-fort config file
+      shell: bash
+      run: mkdir -p ~/.snow && echo "()" > ~/.snow/config.scm
+
+    - name: Install compile-r7rs
+      shell: bash
+      run: |
+        snow-chibi install --always-yes --skip-tests?=1 "(retropikzel compile-r7rs)"
+
+    - name: Compile and run test
+      shell: bash
+      run: |
+        COMPILE_R7RS=${SCHEME} compile-r7rs -o r7rstest r7rstest.scm
+        ./r7rstest
